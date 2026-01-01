@@ -1,0 +1,44 @@
+.page-hero {
+  background: var(--color-bg-soft);
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.contact-box {
+  max-width: 600px;
+  margin: auto;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.contact-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background: #fff;
+  padding: 1.25rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+
+.contact-item i {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.contact-item h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.contact-item p {
+  margin: 0.25rem 0 0;
+  color: #444;
+}
+
+.contact-note {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-top: 1.5rem;
+}

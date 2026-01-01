@@ -1,0 +1,69 @@
+.audio-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #111;
+  color: #fff;
+  z-index: 9999;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 -6px 20px rgba(0,0,0,.3);
+}
+
+.audio-player.hidden {
+  display: none;
+}
+
+.player-inner {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player-inner img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.player-meta {
+  flex: 1;
+  overflow: hidden;
+}
+
+.player-meta strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.player-meta span {
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+.player-controls button {
+  background: #f59e0b;
+  border: none;
+  color: #000;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+}
+@media (max-width: 600px) {
+  .player-inner {
+    gap: 0.5rem;
+  }
+
+  .player-meta strong {
+    font-size: 0.85rem;
+  }
+
+  .player-meta span {
+    display: none;
+  }
+}

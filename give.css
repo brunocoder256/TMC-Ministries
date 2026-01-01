@@ -1,0 +1,56 @@
+.give-section {
+  background: #fafafa;
+}
+
+.give-inner {
+  max-width: 700px;
+  margin: auto;
+  text-align: center;
+}
+
+.give-intro {
+  font-size: 1.05rem;
+  color: #374151;
+  margin-bottom: 2.5rem;
+}
+
+.give-methods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.give-card {
+  background: #fff;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+.give-card i {
+  font-size: 2rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.give-number {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.give-note {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.give-footer {
+  font-style: italic;
+  color: #4b5563;
+}
+@media (max-width: 768px) {
+  .give-layout {
+    grid-template-columns: 1fr;
+  }
+}

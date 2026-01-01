@@ -1,0 +1,94 @@
+/* =====================
+   CSS RESET
+===================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* =====================
+   ROOT VARIABLES
+===================== */
+:root {
+  --color-primary: #b45309;       /* amber/gold */
+  --color-primary-dark: #92400e;
+  --color-text: #1f2937;          /* gray-800 */
+  --color-muted: #6b7280;         /* gray-500 */
+  --color-bg: #ffffff;
+  --color-bg-soft: #f9fafb;       /* gray-50 */
+  --color-border: #e5e7eb;
+
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+
+  --radius: 12px;
+  --transition: 0.3s ease;
+}
+
+/* =====================
+   BASE STYLES
+===================== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+p {
+  color: var(--color-muted);
+}
+
+/* ===== RESET & BASE ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  color: #111;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Containers */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+  margin: auto;
+}
