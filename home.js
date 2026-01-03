@@ -71,38 +71,49 @@ const todayDevotionalCard =
   document.getElementById("todayDevotionalCard");
 
 if (todayDevotionalCard) {
-  fetchSheet(DEVOTIONALS_SHEET_ID).then(rows => {
-    const devotionals = rows
-      .map(r => ({
-        date: r.c[0]?.v,
-        title: r.c[1]?.v,
-        scripture: r.c[2]?.v,
-        ref: r.c[3]?.v,
-        body: r.c[4]?.v
-      }))
-      .filter(d => d.title && d.body);
+  fetchSheet(DEVOTIONALS_SHEET_ID)
+    .then(rows => {
+      const devotionals = rows
+        .map(r => ({
+          date: r.c[0]?.v,
+          title: r.c[1]?.v,
+          scripture: r.c[2]?.v,
+          ref: r.c[3]?.v,
+          body: r.c[4]?.v
+        }))
+        .filter(d => d.title && d.body);
 
-    if (!devotionals.length) return;
+      if (!devotionals.length) {
+        todayDevotionalCard.innerHTML =
+          `<p>No devotional available.</p>`;
+        return;
+      }
 
-    const today = new Date().toDateString();
+      const todayStr = new Date().toISOString().split("T")[0];
 
-    let devotional =
-      devotionals.find(d =>
-        d.date &&
-        new Date(d.date).toDateString() === today
-      ) || devotionals[0]; // fallback latest
+      let todays = devotionals.find(d => {
+        if (!d.date) return false;
+        return d.date.toString().includes(todayStr);
+      });
 
-    renderTodayDevotional(devotional);
-  });
+      if (!todays) {
+        todays = devotionals[0]; // fallback to latest
+      }
+
+      renderTodayDevotional(todays);
+    })
+    .catch(err => {
+      console.error("Devotional error:", err);
+      todayDevotionalCard.innerHTML =
+        `<p>Unable to load devotional.</p>`;
+    });
 }
 
 function renderTodayDevotional(d) {
   const excerpt =
-    d.body.length > 180
-      ? d.body.substring(0, 180) + "…"
+    d.body.length > 160
+      ? d.body.slice(0, 160) + "…"
       : d.body;
-
-  todayDevotionalCard.classList.remove("loading");
 
   todayDevotionalCard.innerHTML = `
     <div class="devotional-card">
@@ -123,6 +134,7 @@ function renderTodayDevotional(d) {
     </div>
   `;
 }
+
 
 
 /* ================= EVENTS ================= */
@@ -151,6 +163,7 @@ if (eventsGrid) {
       console.error("Events preview error:", err);
     });
 }
+
 
 
 
