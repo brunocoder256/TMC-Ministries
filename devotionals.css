@@ -88,4 +88,63 @@ blockquote cite {
 .btn-copy:hover {
   background: #e5e7eb;
 }
+.devotional-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+/* Base button */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+}
+
+/* WhatsApp */
+.action-btn.whatsapp {
+  background: #25d366;
+  color: #fff;
+}
+
+.action-btn.whatsapp::before {
+  content: "🟢";
+}
+
+/* Copy */
+.action-btn.copy {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.action-btn.copy::before {
+  content: "📋";
+}
+
+/* Mobile spacing */
+@media (max-width: 640px) {
+  .devotional-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 
