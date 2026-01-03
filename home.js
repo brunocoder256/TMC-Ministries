@@ -61,8 +61,6 @@ if (mediaGrid) {
     });
 }
 
-/* ================= DEVOTIONALS ================= */
-/* =========================
    TODAY'S DEVOTIONAL
 ========================= */
 const DEVOTIONALS_SHEET_ID =
@@ -152,4 +150,5 @@ if (eventsGrid) {
       console.error("Events preview error:", err);
     });
 }
+
 
