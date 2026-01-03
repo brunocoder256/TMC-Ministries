@@ -45,18 +45,30 @@ function renderAudio(items) {
     const card = document.createElement("div");
     card.className = "media-card";
 
-    card.innerHTML = `
-      <img src="${item.cover}" alt="${item.title}">
-      <div class="content">
-        <h3>${item.title}</h3>
-        ${item.artist ? `<p>${item.artist}</p>` : ""}
-        <button class="btn-play"
-         onclick='playTrack(${JSON.stringify(item)})'>
-         ▶ Play
-        </button>
 
-      </div>
-    `;
+   card.innerHTML = `
+  <img src="${item.cover}" alt="${item.title}">
+
+  <div class="content">
+    <h3>${item.title}</h3>
+    ${item.artist ? `<p>${item.artist}</p>` : ""}
+
+    <div class="audio-actions">
+      <button class="btn-play"
+        onclick='playTrack(${JSON.stringify(item)})'>
+        ▶ Play
+      </button>
+
+      <a
+        href="${item.audio}"
+        download
+        class="btn-download"
+      >
+        ⬇ Download
+      </a>
+    </div>
+  </div>
+`;
 
     audioGrid.appendChild(card);
   });
@@ -75,3 +87,4 @@ searchInput.addEventListener("input", e => {
 
   renderAudio(filtered);
 });
+
