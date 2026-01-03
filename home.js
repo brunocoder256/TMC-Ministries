@@ -1,87 +1,94 @@
 /* ================= SHEET IDS ================= */
-const MUSIC_SHEET_ID = "1bAR9UhzVJdK2dh-PvE3LI0HP7wbA-lMVP-H_GEbSwG0";
-const VIDEO_SHEET_ID = "1zCCxU949thb2YYrpl6qPZ-td4vJFAxUkY078oOl0Lwc";
-const DEVOTIONALS_SHEET_ID = "1kEea5XwYqU7b0yEi1baFIibBOkb1MCJbNg2PM3qGo6g";
-const EVENTS_SHEET_ID = "1GRZunQnbhg5POMFX3K_Qo4849rj9INXZMWIpViQkpCo";
+const SHEETS = {
+  music: "1bAR9UhzVJdK2dh-PvE3LI0HP7wbA-lMVP-H_GEbSwG0",
+  video: "1zCCxU949thb2YYrpl6qPZ-td4vJFAxUkY078oOl0Lwc",
+  devotionals: "1kEea5XwYqU7b0yEi1baFIibBOkb1MCJbNg2PM3qGo6g",
+  events: "1GRZunQnbhg5POMFX3K_Qo4849rj9INXZMWIpViQkpCo"
+};
 
 /* ================= DOM ================= */
 const mediaGrid = document.getElementById("mediaGrid");
-const devotionalGrid = document.getElementById("devotionalGrid");
+const todayDevotionalCard = document.getElementById("todayDevotionalCard");
 const eventsGrid = document.getElementById("eventsGrid");
+
+/* ================= HELPERS ================= */
+function parseDate(val) {
+  if (!val) return null;
+  const d = new Date(val);
+  return isNaN(d) ? null : d;
+}
 
 /* ================= MEDIA PREVIEW ================= */
 if (mediaGrid) {
   Promise.all([
-    fetchSheet(MUSIC_SHEET_ID),
-    fetchSheet(VIDEO_SHEET_ID)
+    fetchSheet(SHEETS.music),
+    fetchSheet(SHEETS.video)
   ])
     .then(([musicRows, videoRows]) => {
       mediaGrid.innerHTML = "";
 
-      // AUDIO (2)
-      musicRows.slice(0, 2).forEach(r => {
-        const title = r.c[0]?.v;
-        const artist = r.c[1]?.v;
-        const cover = r.c[2]?.v;
-        const audio = r.c[3]?.v;
+      const music = musicRows
+        .map(r => ({
+          title: r.c[0]?.v,
+          artist: r.c[1]?.v,
+          cover: r.c[2]?.v,
+          audio: r.c[3]?.v,
+          date: parseDate(r.c[4]?.v)
+        }))
+        .filter(m => m.title && m.audio)
+        .sort((a, b) => b.date - a.date)
+        .slice(0, 2);
 
-        if (!title || !audio) return;
-
+      music.forEach(m => {
         mediaGrid.innerHTML += `
           <div class="media-card">
-            <img src="${cover}">
-            <h3>${title}</h3>
-            <button onclick='playTrack(${JSON.stringify({
-              title,
-              artist,
-              cover,
-              audio
-            })})'>▶ Play</button>
+            <img src="${m.cover}">
+            <h3>${m.title}</h3>
+            <button onclick='playTrack(${JSON.stringify(m)})'>
+              ▶ Play
+            </button>
           </div>
         `;
       });
 
-      // VIDEO (2)
-      videoRows.slice(0, 2).forEach(r => {
-        const title = r.c[0]?.v;
-        const youtube = r.c[2]?.v;
+      const videos = videoRows
+        .map(r => ({
+          title: r.c[0]?.v,
+          youtube: r.c[2]?.v
+        }))
+        .filter(v => v.title && v.youtube)
+        .slice(0, 2);
 
-        if (!title || !youtube) return;
-
+      videos.forEach(v => {
         mediaGrid.innerHTML += `
           <div class="media-card">
-            <img src="https://img.youtube.com/vi/${youtube}/hqdefault.jpg">
-            <h3>${title}</h3>
+            <img src="https://img.youtube.com/vi/${v.youtube}/hqdefault.jpg">
+            <h3>${v.title}</h3>
           </div>
         `;
       });
     })
     .catch(err => {
       console.error("Media preview error:", err);
+      mediaGrid.innerHTML = `<p>Unable to load media.</p>`;
     });
 }
 
-/* =========================
-   TODAY'S DEVOTIONAL
-========================= */
-const DEVOTIONALS_SHEET_ID =
-  "1kEea5XwYqU7b0yEi1baFIibBOkb1MCJbNg2PM3qGo6g";
-
-const todayDevotionalCard =
-  document.getElementById("todayDevotionalCard");
-
+/* ================= TODAY'S DEVOTIONAL ================= */
 if (todayDevotionalCard) {
-  fetchSheet(DEVOTIONALS_SHEET_ID)
+  fetchSheet(SHEETS.devotionals)
     .then(rows => {
       const devotionals = rows
         .map(r => ({
-          date: r.c[0]?.v,
+          date: parseDate(r.c[0]?.v),
           title: r.c[1]?.v,
           scripture: r.c[2]?.v,
           ref: r.c[3]?.v,
-          body: r.c[4]?.v
+          body: r.c[4]?.v,
+          author: r.c[5]?.v
         }))
-        .filter(d => d.title && d.body);
+        .filter(d => d.title && d.body)
+        .sort((a, b) => b.date - a.date);
 
       if (!devotionals.length) {
         todayDevotionalCard.innerHTML =
@@ -89,16 +96,12 @@ if (todayDevotionalCard) {
         return;
       }
 
-      const todayStr = new Date().toISOString().split("T")[0];
+      const today = new Date().toDateString();
 
-      let todays = devotionals.find(d => {
-        if (!d.date) return false;
-        return d.date.toString().includes(todayStr);
-      });
-
-      if (!todays) {
-        todays = devotionals[0]; // fallback to latest
-      }
+      const todays =
+        devotionals.find(d =>
+          d.date && d.date.toDateString() === today
+        ) || devotionals[0];
 
       renderTodayDevotional(todays);
     })
@@ -111,9 +114,7 @@ if (todayDevotionalCard) {
 
 function renderTodayDevotional(d) {
   const excerpt =
-    d.body.length > 160
-      ? d.body.slice(0, 160) + "…"
-      : d.body;
+    d.body.length > 160 ? d.body.slice(0, 160) + "…" : d.body;
 
   todayDevotionalCard.innerHTML = `
     <div class="devotional-card">
@@ -135,36 +136,33 @@ function renderTodayDevotional(d) {
   `;
 }
 
-
-
-/* ================= EVENTS ================= */
+/* ================= EVENTS PREVIEW ================= */
 if (eventsGrid) {
-  fetchSheet(EVENTS_SHEET_ID)
+  fetchSheet(SHEETS.events)
     .then(rows => {
+      const events = rows
+        .map(r => ({
+          date: r.c[0]?.v,
+          title: r.c[1]?.v,
+          location: r.c[2]?.v
+        }))
+        .filter(e => e.title)
+        .slice(0, 2);
+
       eventsGrid.innerHTML = "";
 
-      rows.slice(0, 2).forEach(r => {
-        const date = r.c[0]?.v;
-        const title = r.c[1]?.v;
-        const location = r.c[2]?.v;
-
-        if (!title) return;
-
+      events.forEach(e => {
         eventsGrid.innerHTML += `
           <div class="event-card">
-            <strong>${date}</strong>
-            <h3>${title}</h3>
-            <p>${location}</p>
+            <strong>${e.date}</strong>
+            <h3>${e.title}</h3>
+            <p>${e.location || ""}</p>
           </div>
         `;
       });
     })
     .catch(err => {
       console.error("Events preview error:", err);
+      eventsGrid.innerHTML = `<p>Unable to load events.</p>`;
     });
 }
-
-
-
-
-
