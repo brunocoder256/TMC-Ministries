@@ -31,3 +31,25 @@
   cursor: pointer;
   font-weight: 500;
 }
+.audio-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-download {
+  font-size: 0.85rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  background: #f3f4f6;
+  color: #111827;
+  text-decoration: none;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-download:hover {
+  background: #e5e7eb;
+}
+
+
