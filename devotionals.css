@@ -146,5 +146,18 @@ blockquote cite {
     justify-content: center;
   }
 }
+.devotional-item.today {
+  border-left: 4px solid var(--color-primary);
+  background: #fefce8;
+  font-weight: 600;
+}
+
+.devotional-item.today::after {
+  content: "Today";
+  font-size: 0.7rem;
+  margin-left: 0.5rem;
+  color: var(--color-primary);
+}
+
 
 
