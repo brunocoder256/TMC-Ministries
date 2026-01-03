@@ -47,11 +47,20 @@ fetchSheet(DEVOTIONALS_SHEET_ID).then(rows => {
 function renderList(items) {
   list.innerHTML = "";
 
-  let todayIndex = items.findIndex(
-    d => formatDate(d.date) === today
-  );
+  let todayIndex = -1;
 
-  // If today's devotional not found, use latest
+  items.forEach((d, i) => {
+    if (d.date) {
+      const sheetDate = new Date(d.date).toDateString();
+      const todayDate = new Date().toDateString();
+
+      if (sheetDate === todayDate) {
+        todayIndex = i;
+      }
+    }
+  });
+
+  // Fallback: if today not found, use first devotional
   if (todayIndex === -1) {
     todayIndex = 0;
   }
@@ -63,7 +72,7 @@ function renderList(items) {
 
     if (i === todayIndex) {
       item.classList.add("active", "today");
-      renderReader(d, i);
+      renderReader(d, i); // 🔥 THIS LINE FIXES EVERYTHING
     }
 
     item.onclick = () => {
@@ -80,6 +89,7 @@ function renderList(items) {
     list.appendChild(item);
   });
 }
+
 
 /* =========================
    READER
@@ -160,3 +170,4 @@ ${d.body}
     alert("Devotional copied ✔");
   });
 }
+
