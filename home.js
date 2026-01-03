@@ -62,31 +62,69 @@ if (mediaGrid) {
 }
 
 /* ================= DEVOTIONALS ================= */
-if (devotionalGrid) {
-  fetchSheet(DEVOTIONALS_SHEET_ID)
-    .then(rows => {
-      devotionalGrid.innerHTML = "";
+/* =========================
+   TODAY'S DEVOTIONAL
+========================= */
+const DEVOTIONALS_SHEET_ID =
+  "1kEea5XwYqU7b0yEi1baFIibBOkb1MCJbNg2PM3qGo6g";
 
-      rows.slice(0, 2).forEach(r => {
-        const title = r.c[1]?.v;
-        const body = r.c[4]?.v;
-        const author = r.c[5]?.v;
+const todayDevotionalCard =
+  document.getElementById("todayDevotionalCard");
 
-        if (!title || !body) return;
+if (todayDevotionalCard) {
+  fetchSheet(DEVOTIONALS_SHEET_ID).then(rows => {
+    const devotionals = rows
+      .map(r => ({
+        date: r.c[0]?.v,
+        title: r.c[1]?.v,
+        scripture: r.c[2]?.v,
+        ref: r.c[3]?.v,
+        body: r.c[4]?.v
+      }))
+      .filter(d => d.title && d.body);
 
-        devotionalGrid.innerHTML += `
-          <div class="devotional-card">
-            <h3>${title}</h3>
-            <p>${body.substring(0, 120)}...</p>
-            <small>${author || ""}</small>
-          </div>
-        `;
-      });
-    })
-    .catch(err => {
-      console.error("Devotional preview error:", err);
-    });
+    if (!devotionals.length) return;
+
+    const today = new Date().toDateString();
+
+    let devotional =
+      devotionals.find(d =>
+        d.date &&
+        new Date(d.date).toDateString() === today
+      ) || devotionals[0]; // fallback latest
+
+    renderTodayDevotional(devotional);
+  });
 }
+
+function renderTodayDevotional(d) {
+  const excerpt =
+    d.body.length > 180
+      ? d.body.substring(0, 180) + "…"
+      : d.body;
+
+  todayDevotionalCard.classList.remove("loading");
+
+  todayDevotionalCard.innerHTML = `
+    <div class="devotional-card">
+      <span class="badge">Today</span>
+
+      <h3>${d.title}</h3>
+
+      <blockquote>
+        <p>${d.scripture}</p>
+        <cite>${d.ref}</cite>
+      </blockquote>
+
+      <p class="excerpt">${excerpt}</p>
+
+      <a href="devotionals.html" class="read-more">
+        Read Full Devotional →
+      </a>
+    </div>
+  `;
+}
+
 
 /* ================= EVENTS ================= */
 if (eventsGrid) {
@@ -114,3 +152,4 @@ if (eventsGrid) {
       console.error("Events preview error:", err);
     });
 }
+
