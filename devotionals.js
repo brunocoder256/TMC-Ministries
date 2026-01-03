@@ -14,6 +14,16 @@ let devotionals = [];
 let currentIndex = 0;
 
 /* =========================
+   HELPERS
+========================= */
+function formatDate(d) {
+  const date = new Date(d);
+  return date.toISOString().split("T")[0];
+}
+
+const today = formatDate(new Date());
+
+/* =========================
    FETCH
 ========================= */
 fetchSheet(DEVOTIONALS_SHEET_ID).then(rows => {
@@ -29,33 +39,44 @@ fetchSheet(DEVOTIONALS_SHEET_ID).then(rows => {
     .filter(d => d.title && d.body);
 
   renderList(devotionals);
-
-  if (devotionals.length) {
-    renderReader(devotionals[0], 0);
-  }
 });
 
 /* =========================
-   LIST
+   LIST + AUTO SELECT TODAY
 ========================= */
 function renderList(items) {
   list.innerHTML = "";
+
+  let todayIndex = items.findIndex(
+    d => formatDate(d.date) === today
+  );
+
+  // If today's devotional not found, use latest
+  if (todayIndex === -1) {
+    todayIndex = 0;
+  }
 
   items.forEach((d, i) => {
     const item = document.createElement("div");
     item.className = "devotional-item";
     item.textContent = d.title;
 
+    if (i === todayIndex) {
+      item.classList.add("active", "today");
+      renderReader(d, i);
+    }
+
     item.onclick = () => {
       document
         .querySelectorAll(".devotional-item")
-        .forEach(el => el.classList.remove("active"));
+        .forEach(el =>
+          el.classList.remove("active", "today")
+        );
 
       item.classList.add("active");
       renderReader(d, i);
     };
 
-    if (i === 0) item.classList.add("active");
     list.appendChild(item);
   });
 }
@@ -83,21 +104,20 @@ function renderReader(d, index) {
       ${d.body.replace(/\n/g, "<br><br>")}
     </div>
 
-  <div class="devotional-actions">
-  <button class="action-btn whatsapp" onclick="shareDevotional()">
-    <span>Share on WhatsApp</span>
-  </button>
+    <div class="devotional-actions">
+      <button class="action-btn whatsapp" onclick="shareDevotional()">
+        Share on WhatsApp
+      </button>
 
-  <button class="action-btn copy" onclick="copyDevotional()">
-    <span>Copy Devotional</span>
-  </button>
-</div>
-
+      <button class="action-btn copy" onclick="copyDevotional()">
+        Copy Devotional
+      </button>
+    </div>
   `;
 }
 
 /* =========================
-   SHARE (WHATSAPP)
+   SHARE
 ========================= */
 function shareDevotional() {
   const d = devotionals[currentIndex];
@@ -113,10 +133,10 @@ ${d.body}
 — ${d.author || "TMC Ministries"}
 `.trim();
 
-  const url =
-    "https://wa.me/?text=" + encodeURIComponent(text);
-
-  window.open(url, "_blank");
+  window.open(
+    "https://wa.me/?text=" + encodeURIComponent(text),
+    "_blank"
+  );
 }
 
 /* =========================
@@ -140,4 +160,3 @@ ${d.body}
     alert("Devotional copied ✔");
   });
 }
-
