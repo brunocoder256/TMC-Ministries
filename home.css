@@ -55,3 +55,80 @@
     gap: 1rem;
   }
 }
+.todays-devotional {
+  background: linear-gradient(
+    180deg,
+    #fff,
+    #fafafa
+  );
+}
+
+.devotional-preview {
+  max-width: 720px;
+  margin: auto;
+}
+
+.devotional-card {
+  position: relative;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+.devotional-card h3 {
+  font-family: "Playfair Display", serif;
+  margin-bottom: 1rem;
+}
+
+.devotional-card blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.devotional-card cite {
+  display: block;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.devotional-card .excerpt {
+  color: #374151;
+  margin-bottom: 1.5rem;
+}
+
+.devotional-card .read-more {
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.devotional-card .read-more:hover {
+  text-decoration: underline;
+}
+
+.badge {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+}
+
+/* Loading state */
+.devotional-preview.loading {
+  text-align: center;
+  color: #6b7280;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .devotional-card {
+    padding: 1.5rem;
+  }
+}
+
