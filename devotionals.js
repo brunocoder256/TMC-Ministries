@@ -83,15 +83,16 @@ function renderReader(d, index) {
       ${d.body.replace(/\n/g, "<br><br>")}
     </div>
 
-    <div class="devotional-actions">
-      <button class="btn-share" onclick="shareDevotional()">
-        📤 Share on WhatsApp
-      </button>
+  <div class="devotional-actions">
+  <button class="action-btn whatsapp" onclick="shareDevotional()">
+    <span>Share on WhatsApp</span>
+  </button>
 
-      <button class="btn-copy" onclick="copyDevotional()">
-        📋 Copy Text
-      </button>
-    </div>
+  <button class="action-btn copy" onclick="copyDevotional()">
+    <span>Copy Devotional</span>
+  </button>
+</div>
+
   `;
 }
 
@@ -139,3 +140,4 @@ ${d.body}
     alert("Devotional copied ✔");
   });
 }
+
