@@ -170,22 +170,18 @@ if (eventsGrid) {
 }
 
 /* ================= GALLERY PREVIEW ================= */
-
 if (galleryPreviewGrid) {
-  const fetchGallery =
-    typeof cachedFetchSheet === "function"
-      ? cachedFetchSheet
-      : fetchSheet;
-
-  fetchGallery(SHEETS.gallery)
+  cachedFetchSheet(SHEETS.gallery)
     .then(rows => {
       const images = rows
-        .filter(r => r.c && r.c[2] && r.c[2].v)
+        .filter(r => r.c && r.c[2]?.v)
         .map(r => ({
-          title: r.c[1]?.v || "",
-          url: r.c[2]?.v?.trim()
+          title: r.c[1]?.v,
+          url: r.c[2]?.v
         }))
         .slice(0, 6);
+
+      galleryPreviewGrid.innerHTML = "";
 
       if (!images.length) {
         galleryPreviewGrid.innerHTML =
@@ -193,27 +189,21 @@ if (galleryPreviewGrid) {
         return;
       }
 
-      galleryPreviewGrid.innerHTML = "";
-
       images.forEach(img => {
-        const a = document.createElement("a");
-        a.href = "gallery.html";
-        a.title = img.title;
-
-        const image = document.createElement("img");
-        image.src = img.url;
-        image.alt = img.title;
-
-        a.appendChild(image);
-        galleryPreviewGrid.appendChild(a);
+        galleryPreviewGrid.innerHTML += `
+          <a href="gallery.html" class="gallery-preview-item">
+            <img src="${img.url}" alt="${img.title || ""}">
+          </a>
+        `;
       });
     })
     .catch(err => {
-      console.error("Home gallery preview error:", err);
+      console.error("Gallery preview error:", err);
       galleryPreviewGrid.innerHTML =
         `<p>Unable to load gallery.</p>`;
     });
 }
+
 
 
 
