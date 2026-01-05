@@ -173,13 +173,17 @@ if (eventsGrid) {
 if (galleryPreviewGrid) {
   cachedFetchSheet(SHEETS.gallery)
     .then(rows => {
-      const images = rows
-        .map(r => ({
-          title: r.c[1]?.v,
-          url: r.c[2]?.v
-        }))
-        .filter(i => i.url)
-        .slice(0, 6);
+      const images = [];
+
+      rows.forEach(r => {
+        const url = r.c?.[2]?.v;
+        if (url && typeof url === "string") {
+          images.push({
+            title: r.c?.[1]?.v || "",
+            url: url.trim()
+          });
+        }
+      });
 
       if (!images.length) {
         galleryPreviewGrid.innerHTML =
@@ -189,12 +193,16 @@ if (galleryPreviewGrid) {
 
       galleryPreviewGrid.innerHTML = "";
 
-      images.forEach(img => {
-        galleryPreviewGrid.innerHTML += `
-          <a href="gallery.html" title="${img.title || ""}">
-            <img src="${img.url}" alt="${img.title || ""}">
-          </a>
-        `;
+      images.slice(0, 6).forEach(img => {
+        const a = document.createElement("a");
+        a.href = "gallery.html";
+
+        const image = document.createElement("img");
+        image.src = img.url;
+        image.alt = img.title;
+
+        a.appendChild(image);
+        galleryPreviewGrid.appendChild(a);
       });
     })
     .catch(err => {
@@ -203,3 +211,5 @@ if (galleryPreviewGrid) {
         `<p>Unable to load gallery.</p>`;
     });
 }
+
+
