@@ -80,3 +80,16 @@ filter.addEventListener("change", () => {
     : allVideos.filter(v => v.category === val)
   );
 });
+
+/* SEARCH */
+videoSearch.addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+
+  const filtered = allVideos.filter(v =>
+    v.title.toLowerCase().includes(q) ||
+    v.description.toLowerCase().includes(q) ||
+    v.category.toLowerCase().includes(q)
+  );
+
+  renderVideos(filtered);
+});
