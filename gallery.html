@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gallery | TMC Ministries</title>
+
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+
+<header class="site-header">
+  <!-- same header -->
+</header>
+
+<section class="section">
+  <div class="container">
+
+    <div class="section-header">
+      <h2>Gallery</h2>
+      <p>Moments of worship, ministry, and fellowship.</p>
+    </div>
+
+    <!-- Filter -->
+    <div class="gallery-filters">
+      <button class="active" data-filter="all">All</button>
+      <button data-filter="Worship">Worship</button>
+      <button data-filter="Events">Events</button>
+      <button data-filter="Studio">Studio</button>
+      <button data-filter="Outreach">Outreach</button>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div id="galleryGrid" class="gallery-grid"></div>
+
+  </div>
+</section>
+<script src="sheets.js"></script>
+<script src="gallery.js"></script>
+</body>
+</html>
