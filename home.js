@@ -170,8 +170,6 @@ if (eventsGrid) {
 }
 
 /* ================= GALLERY PREVIEW ================= */
-const galleryPreviewGrid =
-  document.getElementById("galleryPreviewGrid");
 
 if (galleryPreviewGrid) {
   const fetchGallery =
@@ -216,6 +214,7 @@ if (galleryPreviewGrid) {
         `<p>Unable to load gallery.</p>`;
     });
 }
+
 
 
 
