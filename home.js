@@ -3,13 +3,15 @@ const SHEETS = {
   music: "1bAR9UhzVJdK2dh-PvE3LI0HP7wbA-lMVP-H_GEbSwG0",
   video: "1zCCxU949thb2YYrpl6qPZ-td4vJFAxUkY078oOl0Lwc",
   devotionals: "1kEea5XwYqU7b0yEi1baFIibBOkb1MCJbNg2PM3qGo6g",
-  events: "1GRZunQnbhg5POMFX3K_Qo4849rj9INXZMWIpViQkpCo"
+  events: "1GRZunQnbhg5POMFX3K_Qo4849rj9INXZMWIpViQkpCo",
+  gallery: "1IsaPFkHyEcQtTBt_vXqf0o08kiyc08rs3bUFut5PWJ8"
 };
 
 /* ================= DOM ================= */
 const mediaGrid = document.getElementById("mediaGrid");
 const todayDevotionalCard = document.getElementById("todayDevotionalCard");
 const eventsGrid = document.getElementById("eventsGrid");
+const galleryPreviewGrid = document.getElementById("galleryPreviewGrid");
 
 /* ================= HELPERS ================= */
 function parseDate(val) {
@@ -21,8 +23,8 @@ function parseDate(val) {
 /* ================= MEDIA PREVIEW ================= */
 if (mediaGrid) {
   Promise.all([
-    fetchSheet(SHEETS.music),
-    fetchSheet(SHEETS.video)
+    cachedFetchSheet(SHEETS.music),
+    cachedFetchSheet(SHEETS.video)
   ])
     .then(([musicRows, videoRows]) => {
       mediaGrid.innerHTML = "";
@@ -76,7 +78,7 @@ if (mediaGrid) {
 
 /* ================= TODAY'S DEVOTIONAL ================= */
 if (todayDevotionalCard) {
-  fetchSheet(SHEETS.devotionals)
+  cachedFetchSheet(SHEETS.devotionals)
     .then(rows => {
       const devotionals = rows
         .map(r => ({
@@ -138,7 +140,7 @@ function renderTodayDevotional(d) {
 
 /* ================= EVENTS PREVIEW ================= */
 if (eventsGrid) {
-  fetchSheet(SHEETS.events)
+  cachedFetchSheet(SHEETS.events)
     .then(rows => {
       const events = rows
         .map(r => ({
@@ -164,5 +166,40 @@ if (eventsGrid) {
     .catch(err => {
       console.error("Events preview error:", err);
       eventsGrid.innerHTML = `<p>Unable to load events.</p>`;
+    });
+}
+
+/* ================= GALLERY PREVIEW ================= */
+if (galleryPreviewGrid) {
+  cachedFetchSheet(SHEETS.gallery)
+    .then(rows => {
+      const images = rows
+        .map(r => ({
+          title: r.c[1]?.v,
+          url: r.c[2]?.v
+        }))
+        .filter(i => i.url)
+        .slice(0, 6);
+
+      if (!images.length) {
+        galleryPreviewGrid.innerHTML =
+          `<p>No gallery images yet.</p>`;
+        return;
+      }
+
+      galleryPreviewGrid.innerHTML = "";
+
+      images.forEach(img => {
+        galleryPreviewGrid.innerHTML += `
+          <a href="gallery.html" title="${img.title || ""}">
+            <img src="${img.url}" alt="${img.title || ""}">
+          </a>
+        `;
+      });
+    })
+    .catch(err => {
+      console.error("Gallery preview error:", err);
+      galleryPreviewGrid.innerHTML =
+        `<p>Unable to load gallery.</p>`;
     });
 }
