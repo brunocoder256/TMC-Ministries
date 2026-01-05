@@ -131,4 +131,22 @@
     padding: 1.5rem;
   }
 }
+.gallery-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.gallery-preview-grid img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform .3s ease;
+}
+
+.gallery-preview-grid img:hover {
+  transform: scale(1.05);
+}
+
 
