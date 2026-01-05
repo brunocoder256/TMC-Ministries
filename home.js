@@ -170,20 +170,24 @@ if (eventsGrid) {
 }
 
 /* ================= GALLERY PREVIEW ================= */
-if (galleryPreviewGrid) {
-  cachedFetchSheet(SHEETS.gallery)
-    .then(rows => {
-      const images = [];
+const galleryPreviewGrid =
+  document.getElementById("galleryPreviewGrid");
 
-      rows.forEach(r => {
-        const url = r.c?.[2]?.v;
-        if (url && typeof url === "string") {
-          images.push({
-            title: r.c?.[1]?.v || "",
-            url: url.trim()
-          });
-        }
-      });
+if (galleryPreviewGrid) {
+  const fetchGallery =
+    typeof cachedFetchSheet === "function"
+      ? cachedFetchSheet
+      : fetchSheet;
+
+  fetchGallery(SHEETS.gallery)
+    .then(rows => {
+      const images = rows
+        .filter(r => r.c && r.c[2] && r.c[2].v)
+        .map(r => ({
+          title: r.c[1]?.v || "",
+          url: r.c[2]?.v?.trim()
+        }))
+        .slice(0, 6);
 
       if (!images.length) {
         galleryPreviewGrid.innerHTML =
@@ -193,9 +197,10 @@ if (galleryPreviewGrid) {
 
       galleryPreviewGrid.innerHTML = "";
 
-      images.slice(0, 6).forEach(img => {
+      images.forEach(img => {
         const a = document.createElement("a");
         a.href = "gallery.html";
+        a.title = img.title;
 
         const image = document.createElement("img");
         image.src = img.url;
@@ -206,10 +211,11 @@ if (galleryPreviewGrid) {
       });
     })
     .catch(err => {
-      console.error("Gallery preview error:", err);
+      console.error("Home gallery preview error:", err);
       galleryPreviewGrid.innerHTML =
         `<p>Unable to load gallery.</p>`;
     });
 }
+
 
 
